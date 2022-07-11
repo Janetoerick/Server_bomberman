@@ -10,8 +10,7 @@ const sockets = socket(server);
 let clients = []
 
 let lobby = {
-    games: [],
-    chat: []
+    games: []
 }
 
 let message_chat = {
@@ -22,6 +21,7 @@ let message_chat = {
 let game = {
     id: -1,
     players: [],            // jogadores
+    chat: [],               // chat
     winner: -1,             // vencedor
     started: false          // se o jogo começou
 };
@@ -40,13 +40,24 @@ let player = {
 
 
 sockets.on('connection', (socket) => {
-    console.log(`${socket.id} conectado.`);
+
+    socket.on('startSession', () => {
+        clients.push(socket.id);
+        console.log(`${socket.id} conectado.`);
+    });
 
 
 
 });
 
-
+function client_exist(id){
+    for (var i = 0; i < clients.length; i++) {
+        if (clients[i] == id) {
+            return true;
+        }
+    }
+    return false;
+}
 
 //app.get('/', (req, res) => res.send("helo"));
 
