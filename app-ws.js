@@ -11,6 +11,7 @@ let user = {
 }
 
 let lobby = {
+    chat: [],
     games: []
 }
 
@@ -22,7 +23,6 @@ let message_chat = {
 let game = {
     id: -1,
     players: [],            // jogadores
-    chat: [],               // chat
     winner: -1,             // vencedor
     started: false          // se o jogo começou
 };
@@ -37,35 +37,52 @@ let player = {
     death: false            // se esta morto
 };
 
-function onRegister(ws, data) {
+function onMessage(ws, data) {
     const json = JSON.parse(data);
     
-    var approved = true;
-    for(var i = 0; i < users.length; i++){
-        if(users[i].username == json.username || users[i].email == json.email){
-            approved = false;
+    if(json.type == "register"){
+        var approved = true;
+        for(var i = 0; i < users.length; i++){
+            if(users[i].username == json.username || users[i].email == json.email){
+                approved = false;
+            }
+        }
+    
+        if(approved){
+            var u = JSON.parse(JSON.stringify(user));
+            u.username = json.username;
+            u.email = json.email;
+            u.senha = json.senha;
+    
+            users.push(u);
+            console.log("User ", u.username, " add in system!");
+            ws.send(JSON.stringify({
+                type: 'Registration',
+                data: 'success'
+            }));
+        } else {
+            ws.send(JSON.stringify({
+                type: 'Registration',
+                data: 'error'
+            }));
+        } 
+    } else if (json.type == "login") {
+        for(var i = 0; i < users.length; i++){
+            if(users[i].username == json.username){
+                if(users[i].password == json.password){
+                    ws.send(JSON.stringify({
+                        type: "login",
+                        data: "sucess"
+                    }));
+                } else {
+                    ws.send(JSON.stringify({
+                        type: "login",
+                        data: "error"
+                    }));
+                }
+            }
         }
     }
-
-    if(approved){
-        var u = JSON.parse(JSON.stringify(user));
-        u.username = json.username;
-        u.email = json.email;
-        u.senha = json.senha;
-
-        users.push(u);
-        console.log("User ", u.username, " add in system!");
-        ws.send(JSON.stringify({
-            type: 'Registration',
-            data: 'success'
-        }));
-    } else {
-        ws.send(JSON.stringify({
-            type: 'Registration',
-            data: 'error'
-        }));
-    }
-    
 }
 
 function onError(ws, err) {
@@ -82,13 +99,9 @@ function onClose(ws, reasonCode, description) {
 
 function onConnection(ws, req) {
     clients.push(ws);
-    ws.on('message', data => onRegister(ws, data));
+    ws.on('message', data => onMessage(ws, data));
     ws.on('error', error => onError(ws, error));
     ws.on('close', (reasonCode, description) => onClose(ws, reasonCode, description));
-    ws.send(JSON.stringify({
-        type: 'connection',
-        data: 'Bem vindo'
-    }))
     console.log(`onConnection`);
 }
  
