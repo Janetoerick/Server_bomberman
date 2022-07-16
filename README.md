@@ -1,3 +1,3 @@
 # Server_bomberman
 
-Servidor nodeJS usando socket.io para jogo de bomberman.
+Servidor nodeJS usando Websocket para jogo de bomberman.
