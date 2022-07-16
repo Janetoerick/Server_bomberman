@@ -7,7 +7,8 @@ let users = []
 let user = {
     email: "",
     username: "",
-    senha: ""
+    senha: "",
+    inGame: false
 }
 
 let lobby = {
@@ -55,7 +56,7 @@ function onMessage(ws, data) {
             u.senha = json.senha;
     
             users.push(u);
-            console.log("User ", u.username, " add in system!");
+            console.log("# User ", u.username, " add in system");
             ws.send(JSON.stringify({
                 type: 'Registration',
                 data: 'success'
@@ -70,9 +71,10 @@ function onMessage(ws, data) {
         for(var i = 0; i < users.length; i++){
             if(users[i].username == json.username){
                 if(users[i].password == json.password){
+                    console.log("$ User ", json.username, " fez login")
                     ws.send(JSON.stringify({
                         type: "login",
-                        data: "sucess"
+                        data: "success"
                     }));
                 } else {
                     ws.send(JSON.stringify({
@@ -80,6 +82,11 @@ function onMessage(ws, data) {
                         data: "error"
                     }));
                 }
+            } else {
+                ws.send(JSON.stringify({
+                    type: "login",
+                    data: "error"
+                }));
             }
         }
     }

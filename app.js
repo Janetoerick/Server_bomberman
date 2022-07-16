@@ -17,8 +17,8 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-    res.redirect('register.html');
+app.get('/register', (req, res) => {
+    res.sendFile(__dirname + '/public/register.html');
 });
 
 module.exports = app;

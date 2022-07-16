@@ -4,38 +4,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Cadastro</title>
 
     <script>
         const ws = new WebSocket("ws://" + location.host);
 
         function send(){
             ws.send(JSON.stringify({
-                type:"login",
-                username: login.value,
+                type:"register",
+                username: username.value,
+                email: email.value,
                 senha: senha.value
             }));
         }
 
         ws.onmessage = (event) => {        
             const json = JSON.parse(event.data);
-            console.log("ta aqui !!");
             console.log('json', json);
             if (json.data == 'error') {
-                document.getElementById("erro").innerHTML = "UserName ou senha inválido!"
+                document.getElementById("erro").innerHTML = "UserName ou Email inválido!"
                 document.getElementById("erro").style.color = "red";
             } else if (json.data == 'success') {
-                window.location= "";                        // VAI PRO LOBBY AQUII <----------------
+                alert("Usuário adicionado com sucesso!");
+                window.location= "index.html";
             }
         }
     </script>
-
 </head>
 <body>
-    <input id="login" placeholder="Login">
+    <h2>Cadastro</h2>
+    <input id="username" placeholder="User name">
+    <input id="email" placeholder="Email">
     <input id="senha" type="password" placeholder="Senha">
-    <p id="erro"></p>
-    <button onClick="send()">Entrar</button>
-    <button onclick="window.location.href = 'register'">Cadastrar conta</button>
+    <p id="erro"></p>    
+    <button onClick="send()">Cadastrar</button><br>
+    <button onclick="javascript:history.back()">Voltar</button>
 </body>
 </html>
