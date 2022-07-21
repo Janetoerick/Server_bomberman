@@ -41,15 +41,25 @@ let player = {
     death: false            // se esta morto
 };
 
+function getGame(nameOwner){
+    for(i = 0; i < lobby.maps.length; i++){
+        if(ws == lobby.maps[i].owner){
+            return lobby.maps[i];
+        }
+    }
+
+    return false;
+}
+
 function onMessage(ws, data) {
     const json = JSON.parse(data);
     if(json.inGame == "false"){
-        if(json.type == "register"){
-            var approved = true;
-            for(var i = 0; i < users.length; i++){
-                if(users[i].username == json.username || users[i].email == json.email){
-                    approved = false;
-                }
+        if(json.type == "register"){                // --------------------------------- // JSON : { inGame: "false",
+            var approved = true;                                                         //          type:"register",
+            for(var i = 0; i < users.length; i++){                                       //         username: <login do usuario>,
+                if(users[i].username == json.username || users[i].email == json.email){  //         email: <email do usuario>,
+                    approved = false;                                                    //         senha: <senha do usuario>
+                }                                                                        //        }
             }
         
             if(approved){
@@ -70,11 +80,11 @@ function onMessage(ws, data) {
                     data: 'error'
                 }));
             } 
-        } else if (json.type == "login") {
-            for(var i = 0; i < users.length; i++){
-                if(users[i].username == json.username){
-                    if(users[i].password == json.password){
-                        console.log("$ User ", json.username, " fez login")
+        } else if (json.type == "login") {          // ------------------------ // JSON : { inGame: "false",                        
+            for(var i = 0; i < users.length; i++){                              //          type:"login",
+                if(users[i].username == json.username){                         //          username: <login do usuario>,
+                    if(users[i].password == json.password){                     //          senha: <senha do usuario>
+                        console.log("$ User ", json.username, " fez login")     //         }
                         ws.send(JSON.stringify({
                             type: "login",
                             data: "success"
@@ -92,15 +102,13 @@ function onMessage(ws, data) {
                     }));
                 }
             }
-        } else if (json.type == "createGame") {
-            for(i = 0; i < lobby.maps.length; i++){
-                if(ws == lobby.maps[i].owner){
-                    ws.send(JSON.stringify({
-                        type: "createGame",
-                        data: "error"
-                    }));
-                }
-            }
+        } else if (json.type == "createGame") {     // ------------------------ // JSON : { inGame: "false",
+            if(getGame(json.name) == false){                                    //          type : "createGame",
+                ws.send(JSON.stringify({                                        //          name : <nome do jogador> 
+                    type: "createGame",                                         //        } 
+                    data: "error"
+                }));
+            } 
             
             let newgame = game;             // 
             newgame.id = json.name;         // criando novo jogo
@@ -124,6 +132,7 @@ function onMessage(ws, data) {
     } else {
         if(json.type == "introGame"){ // entrar na sala do jogo
             // idGame
+
             if(json.position == "variable"){
                 ws.send(JSON.stringify({
                     type: "123",
