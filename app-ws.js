@@ -41,7 +41,7 @@ let player = {
     death: false            // se esta morto
 };
 
-function getGame(){
+function getGame(nameOwner){    // verifica se existe o jogo no servidor (pelo nome do criador)
     for(i = 0; i < lobby.maps.length; i++){
         if(ws == lobby.maps[i].owner){
             return lobby.maps[i];
@@ -122,6 +122,8 @@ function onMessage(ws, data) {
 
             lobby.games.push(newgame);      // salvando jogo no servidor
 
+            console.log("Jogador ", json.name, " criou um novo jogo."); // notificando no servidor
+
             ws.send(JSON.stringify({
                 type: "createGame",
                 data: "success"
@@ -129,15 +131,52 @@ function onMessage(ws, data) {
 
         }
     } else {
-        if(json.type == "introGame"){ // entrar na sala do jogo
-            // idGame
-
-            if(json.position == "variable"){
-                ws.send(JSON.stringify({
-                    type: "123",
-                    data: "OK"
+        if(json.type == "introGame"){ // entrar na sala do jogo                             // JSON : { inGame: "false",
+            let tempGame = getGame(json.nameId);                                            //          type: "introGame",          
+            if(tempGame == false){                                                          //          nameId: <username do dono do jogo>,
+                ws.send(JSON.stringify({                                                    //          name: <username do jogador>
+                    type: "introGame",                                                      //         }
+                    data: "Erro - Jogo não existe!"
                 }));
-            }    
+            }
+
+            let newPlayer = player;
+            newPlayer.username = json.name;
+            newPlayer.socket = ws;
+
+            if(tempGame.players.length == 1){
+                newPlayer.position_x = 10;
+                newPlayer.position_y = 0;
+            } else if(tempGame.players.length == 2){
+                newPlayer.position_x = 10;
+                newPlayer.position_y = 10;
+            } else if(tempGame.players.length == 3){
+                newPlayer.position_x = 0;
+                newPlayer.position_y = 10;
+            } else {
+                ws.send(JSON.stringify({
+                    type: "introGame",
+                    data: "Erro - Jogo já atingiu o número máximo de jogadores"
+                }));
+            }
+
+            for(i = 0; i < lobby.maps.length; i++){
+                if(lobby.maps.id == json.nameId){
+                    lobby.maps.players.push(newPlayer);
+                    console.log("Jogador ",newplayer.username, " entrou no jogo de ", json.nameId);
+                    ws.send(JSON.stringify({
+                        type: "introGame",
+                        data: "success"
+                    }));
+                    break;
+                }
+            }
+
+            ws.send(JSON.stringify({
+                type: "introGame",
+                data: "ERROR 119"
+            }));
+
         } else if (json.type == "startGame") { // começar a partida
 
         } else if (json.type == "move") { // mover personagem
