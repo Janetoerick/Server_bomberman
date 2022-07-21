@@ -91,7 +91,7 @@ function onMessage(ws, data) {
             }
         }
     } else {
-        if(json.type == "introGame"){
+        if(json.type == "introGame"){ // entrar na sala do jogo
             // idGame
             if(json.position == "valiable"){
                 ws.send(JSON.stringify({
@@ -99,6 +99,18 @@ function onMessage(ws, data) {
                     data: "OK"
                 }));
             }    
+        } else if (json.type == "startGame") { // começar a partida
+
+        } else if (json.type == "move") { // mover personagem
+
+        } else if (json.type == "bombCreate") { // colocar bomba no mapa
+
+        } else if (json.type == "bombDestroyer") { // danos causado pela bomba (qual bomba explodiu e quais blocos quebrou)
+
+        } else if (json.type == "deathPlayer"){ // jogador morreu [se esta sobrando um, manda mensagem que ele ganhou]
+
+        } else if (json.type == "getPower") { // pegar poder
+
         }
     }
         
