@@ -40,56 +40,68 @@ let player = {
 
 function onMessage(ws, data) {
     const json = JSON.parse(data);
-    
-    if(json.type == "register"){
-        var approved = true;
-        for(var i = 0; i < users.length; i++){
-            if(users[i].username == json.username || users[i].email == json.email){
-                approved = false;
+    if(json.inGame == "false"){
+        if(json.type == "register"){
+            var approved = true;
+            for(var i = 0; i < users.length; i++){
+                if(users[i].username == json.username || users[i].email == json.email){
+                    approved = false;
+                }
             }
-        }
-    
-        if(approved){
-            var u = JSON.parse(JSON.stringify(user));
-            u.username = json.username;
-            u.email = json.email;
-            u.senha = json.senha;
-    
-            users.push(u);
-            console.log("# User ", u.username, " add in system");
-            ws.send(JSON.stringify({
-                type: 'Registration',
-                data: 'success'
-            }));
-        } else {
-            ws.send(JSON.stringify({
-                type: 'Registration',
-                data: 'error'
-            }));
-        } 
-    } else if (json.type == "login") {
-        for(var i = 0; i < users.length; i++){
-            if(users[i].username == json.username){
-                if(users[i].password == json.password){
-                    console.log("$ User ", json.username, " fez login")
-                    ws.send(JSON.stringify({
-                        type: "login",
-                        data: "success"
-                    }));
+        
+            if(approved){
+                var u = JSON.parse(JSON.stringify(user));
+                u.username = json.username;
+                u.email = json.email;
+                u.senha = json.senha;
+        
+                users.push(u);
+                console.log("# User ", u.username, " add in system");
+                ws.send(JSON.stringify({
+                    type: 'Registration',
+                    data: 'success'
+                }));
+            } else {
+                ws.send(JSON.stringify({
+                    type: 'Registration',
+                    data: 'error'
+                }));
+            } 
+        } else if (json.type == "login") {
+            for(var i = 0; i < users.length; i++){
+                if(users[i].username == json.username){
+                    if(users[i].password == json.password){
+                        console.log("$ User ", json.username, " fez login")
+                        ws.send(JSON.stringify({
+                            type: "login",
+                            data: "success"
+                        }));
+                    } else {
+                        ws.send(JSON.stringify({
+                            type: "login",
+                            data: "error"
+                        }));
+                    }
                 } else {
                     ws.send(JSON.stringify({
                         type: "login",
                         data: "error"
                     }));
                 }
-            } else {
-                ws.send(JSON.stringify({
-                    type: "login",
-                    data: "error"
-                }));
             }
         }
+    } else {
+        if(json.type == "introGame"){
+            // idGame
+            if(json.position == "valiable"){
+                ws.send(JSON.stringify({
+                    type: "123",
+                    data: "OK"
+                }));
+            }    
+        }
     }
+        
 }
 
 function onError(ws, err) {

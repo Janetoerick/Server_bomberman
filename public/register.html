@@ -11,6 +11,7 @@
 
         function send(){
             ws.send(JSON.stringify({
+                inGame: "false",
                 type:"register",
                 username: username.value,
                 email: email.value,
