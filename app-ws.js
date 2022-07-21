@@ -22,7 +22,9 @@ let message_chat = {
 }
 
 let game = {
-    id: -1,
+    id: "",
+    owner: "",
+    link_acess: "",
     players: [],            // jogadores
     winner: -1,             // vencedor
     started: false          // se o jogo começou
@@ -30,6 +32,7 @@ let game = {
 
 let player = {
     username: "",
+    socket: "",
     position_x: 0,          // posicao x no mapa
     position_y: 0,          // posicao y no mapa
     bomb_accessible: 1,     // quantidade total de bomba possivel que pode colocar no mapa
@@ -89,11 +92,39 @@ function onMessage(ws, data) {
                     }));
                 }
             }
+        } else if (json.type == "createGame") {
+            for(i = 0; i < lobby.maps.length; i++){
+                if(ws == lobby.maps[i].owner){
+                    ws.send(JSON.stringify({
+                        type: "createGame",
+                        data: "error"
+                    }));
+                }
+            }
+            
+            let newgame = game;             // 
+            newgame.id = json.name;         // criando novo jogo
+            newgame.owner = ws;             //
+            newgame.link_acess = json.name; //
+
+            let newplayer = player;         //
+            newplayer.username = json.name; // criando novo jogador
+            newplayer.socket = ws;          //
+
+            newgame.players.push(newplayer);// colocando jogador no jogo
+
+            lobby.games.push(newgame);      // salvando jogo no servidor
+
+            ws.send(JSON.stringify({
+                type: "createGame",
+                data: "success"
+            }));
+
         }
     } else {
         if(json.type == "introGame"){ // entrar na sala do jogo
             // idGame
-            if(json.position == "valiable"){
+            if(json.position == "variable"){
                 ws.send(JSON.stringify({
                     type: "123",
                     data: "OK"
