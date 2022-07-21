@@ -10,28 +10,55 @@
             width: 500px;
         }
         #lobby {
-            background-color: red;
+            display: flex;
+            
+        }
+        #games {
             width: 100%;
+
+        }
+        #history_messages {
+            overflow: hidden;
+            overflow-y: scroll;
+            height: 88vh;
+        }
+        #button_create{
+            width: 98.5%;
+            height: 30px;
+        }
+        #chat {
+            padding-bottom: 4px;
+        }
+        #message_text{
+            width: 60%;
+            height: 20px;
+        }#button_message {
+            width: 35%;
+            height: 25px;
         }
     </style>
 </head>
 <body onload="getUser()">
-    <div id="chat_total">
-        <!-- <div id="users_logged">
-            <p>Usuários logados:</p>
-            <select multiple="multiple" id='users_list'>
-            </select>
-        </div> -->
-        <div id="history_messages"><p id="test"></p>
-        </div>
-        <div id="chat">
-            <input type='text' id='message_text' name='message_text' />
-            <input type='submit' value='Enviar mensagem' onClick="sendMessage()"/>
-        </div>
-    </div>
     <div id="lobby">
-
+        <div id="chat_total">
+            <!-- <div id="users_logged">
+                <p>Usuários logados:</p>
+                <select multiple="multiple" id='users_list'>
+                </select>
+            </div> -->
+            <aside id="history_messages">
+            </aside>
+            <div id="chat">
+                <input type='text' id='message_text' name='message_text' />
+                <input type='submit' id='button_message' value='Enviar mensagem' onClick="sendMessage()"/>
+            </div>
+            <button id="button_create" onclick="create_game()">Criar novo jogo</button>
+        </div>
+        <div id="games">
+            
+        </div>
     </div>
+    
 
     
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
