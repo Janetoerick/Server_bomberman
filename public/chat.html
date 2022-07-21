@@ -105,14 +105,32 @@
                     text3.id = json.userCreate + "_players";
                     text3.innerText = json.size_players + " / 4";
 
-                    var tex2 = document.createTextNode(json.userCreate + "|   0/4");
                     newGame.appendChild(text1);
                     newGame.appendChild(text2);
                     newGame.appendChild(text3);
                     document.getElementById("games").appendChild(newGame);
                 }
             } else if (json.type == "loadGames") {
+                if(!(json.data == 'error')){
+                    var newGame = document.createElement("div");
+                    newGame.classList.add("game_component");
+                    newGame.id = json.userCreate;
 
+                    var text1 = document.createElement("p");
+                    text1.id = json.userCreate + "_user";
+                    text1.innerText = json.userCreate;
+
+                    var text2 = document.createElement("hr");
+
+                    var text3 = document.createElement("p");
+                    text3.id = json.userCreate + "_players";
+                    text3.innerText = json.size_players + " / 4";
+
+                    newGame.appendChild(text1);
+                    newGame.appendChild(text2);
+                    newGame.appendChild(text3);
+                    document.getElementById("games").appendChild(newGame);
+                }
             }
         }
 

@@ -43,12 +43,15 @@ let player = {
 
 let last_login;
 
-function getGame(nameOwner, id){    // verifica se existe o jogo no servidor (pelo nome do criador)
+function getGame(id){    // verifica se existe o jogo no servidor se existir retorna true, se nao, retorna false
     if(lobby.games.length > 0){
-        for(var i = 0; i < lobby.games.length; i++){
-            if(id == lobby.games[i].id){
-                return lobby.games[i];
+        let i = 0;
+        while(i < lobby.games.length){
+            console.log("-->  ", lobby.games[i].id);
+            if(id === lobby.games[i].id){
+                return true;
             }
+            i++;
         }
     }
     return false;
@@ -136,7 +139,7 @@ function onMessage(ws, data) {
             if(lobby.games.length > 0){
                 for(var i = 0; i < lobby.games.length; i++){
                     ws.send(JSON.stringify({
-                        type: "createGame",
+                        type: "loadGames",
                         data: "success",
                         userCreate: lobby.games[i].id,
                         size_players: lobby.games[i].players.length
@@ -145,13 +148,13 @@ function onMessage(ws, data) {
             }
             
         }else if (json.type == "createGame") {     // ------------------------ // JSON : { inGame: "false",
-            if(getGame(json.name, json.name) != false){                                //          type : "createGame",
-                ws.send(JSON.stringify({                                        //          name : <nome do jogador> 
-                    type: "createGame",                                         //        } 
+            if(getGame(json.name) == true){                                    //          type : "createGame",
+                ws.send(JSON.stringify({                                       //          name : <nome do jogador> 
+                    type: "createGame",                                        //        } 
                     data: "error"
                 }));
             } else {
-                let newgame = game;             // 
+                var newgame = game;             // 
                 newgame.id = json.name;         // criando novo jogo
                 newgame.owner = ws;             //
                 newgame.link_acess = json.name; //
@@ -161,10 +164,21 @@ function onMessage(ws, data) {
                 newplayer.socket = ws;          //
     
                 newgame.players.push(newplayer);// colocando jogador no jogo
-    
+                
+
+                // for(i = 0; i < lobby.games.length; i++){
+                //     console.log("#- lobby1: ", lobby.games[i].id);
+                // }
+                // console.log("----------------------------------------------------------------------------------");
+
                 lobby.games.push(newgame);      // salvando jogo no servidor
+
+                // for(i = 0; i < lobby.games.length; i++){
+                //     console.log("#- lobby2: ", lobby.games[i].id);
+                // }
+                // console.log("----------------------------------------------------------------------------------");
     
-                console.log("Jogador ", json.name, " criou um novo jogo. "); // notificando no servidor
+                // console.log("Jogador ", json.name, " criou um novo jogo. "); // notificando no servidor
                 
                 for(var i = 0; i < clients.length; i++){
                     clients[i].send(JSON.stringify({
@@ -177,9 +191,9 @@ function onMessage(ws, data) {
             }
         }
     } else {
-        if(json.type == "introGame"){ // entrar na sala do jogo                             // JSON : { inGame: "false",
-            let tempGame = getGame(json.nameId, json.name);                                 //          type: "introGame",          
-            if(tempGame == false){                                                          //          nameId: <username do dono do jogo>,
+        if(json.type == "introGame"){ // entrar na sala do jogo                             // JSON : { inGame: "true",
+                                                                                            //          type: "introGame",          
+            if(getGame(json.nameId) == false){                                                          //          nameId: <username do dono do jogo>,
                 ws.send(JSON.stringify({                                                    //          name: <username do jogador>
                     type: "introGame",                                                      //         }
                     data: "Erro - Jogo não existe!"
