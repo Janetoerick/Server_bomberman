@@ -4,7 +4,9 @@ var http = require('http');
 var httpServer = http.createServer(app);
 var io = require('socket.io')(httpServer);
 
-console.log("Chat initialized...");
+http.listen(3000, function() {
+    console.log('listening on *:3000');
+});
 
 var users = [];
 var messages = [];

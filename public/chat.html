@@ -13,7 +13,7 @@
     </div>
     <div id='user_access'>
         <form id="login_user">
-            <input type='text' placeholder='Insert your nick' name='nick' id='nick' />
+            <input type='text' placeholder='Insira seu nome de usuário' name='nick' id='nick' />
             <input type='submit' value='Login' />
         </form>
     </div>
@@ -21,13 +21,14 @@
         <div id="history_messages"></div>
         <form id="chat">
             <input type='text' id='message_text' name='message_text' />
-            <input type='submit' value='Send message' />
+            <input type='submit' value='Enviar mensagem' />
         </form>
     </div>
 
     
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
     <script type="text/javascript">
         var socket = io.connect();
         $("#chat_room").hide();
