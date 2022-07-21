@@ -43,10 +43,12 @@ let player = {
 
 let last_login;
 
-function getGame(nameOwner){    // verifica se existe o jogo no servidor (pelo nome do criador)
-    for(i = 0; i < lobby.maps.length; i++){
-        if(ws == lobby.maps[i].owner){
-            return lobby.maps[i];
+function getGame(nameOwner, id){    // verifica se existe o jogo no servidor (pelo nome do criador)
+    if(lobby.games.length > 0){
+        for(var i = 0; i < lobby.games.length; i++){
+            if(id == lobby.games[i].id){
+                return lobby.games[i];
+            }
         }
     }
     return false;
@@ -133,8 +135,19 @@ function onMessage(ws, data) {
                 type: "setUser",
                 data: last_login
             }));
+            if(lobby.games.length > 0){
+                for(var i = 0; i < lobby.games.length; i++){
+                    ws.send(JSON.stringify({
+                        type: "createGame",
+                        data: "success",
+                        userCreate: lobby.games[i].id,
+                        size_players: lobby.games[i].players.length
+                    }));
+                }
+            }
+            
         }else if (json.type == "createGame") {     // ------------------------ // JSON : { inGame: "false",
-            if(getGame(json.name) == false){                                    //          type : "createGame",
+            if(getGame(json.name, json.name) != false){                                //          type : "createGame",
                 ws.send(JSON.stringify({                                        //          name : <nome do jogador> 
                     type: "createGame",                                         //        } 
                     data: "error"
@@ -153,17 +166,21 @@ function onMessage(ws, data) {
     
                 lobby.games.push(newgame);      // salvando jogo no servidor
     
-                console.log("Jogador ", json.name, " criou um novo jogo."); // notificando no servidor
-    
-                ws.send(JSON.stringify({
-                    type: "createGame",
-                    data: "success"
-                }));
+                console.log("Jogador ", json.name, " criou um novo jogo. "); // notificando no servidor
+                
+                for(var i = 0; i < clients.length; i++){
+                    clients[i].send(JSON.stringify({
+                        type: "createGame",
+                        data: "success",
+                        userCreate: json.name,
+                        size_players: 0
+                    }));
+                }
             }
         }
     } else {
         if(json.type == "introGame"){ // entrar na sala do jogo                             // JSON : { inGame: "false",
-            let tempGame = getGame(json.nameId);                                            //          type: "introGame",          
+            let tempGame = getGame(json.nameId, json.name);                                 //          type: "introGame",          
             if(tempGame == false){                                                          //          nameId: <username do dono do jogo>,
                 ws.send(JSON.stringify({                                                    //          name: <username do jogador>
                     type: "introGame",                                                      //         }
@@ -191,9 +208,9 @@ function onMessage(ws, data) {
                 }
                 
                 var compare = false;
-                for(i = 0; i < lobby.maps.length; i++){
-                    if(lobby.maps.id == json.nameId){
-                        lobby.maps.players.push(newPlayer);
+                for(i = 0; i < lobby.games.length; i++){
+                    if(lobby.games.id == json.nameId){
+                        lobby.games.players.push(newPlayer);
                         console.log("Jogador ",newplayer.username, " entrou no jogo de ", json.nameId);
                         ws.send(JSON.stringify({
                             type: "introGame",

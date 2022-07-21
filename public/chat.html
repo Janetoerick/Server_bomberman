@@ -14,8 +14,16 @@
             
         }
         #games {
+            display: flex;
             width: 100%;
 
+        }
+        .game_component{
+            background-color: lightblue;
+            width: 100px;
+            height: 50px;
+            border-radius: 10px;
+            padding: 10px;
         }
         #history_messages {
             overflow: hidden;
@@ -50,7 +58,7 @@
             </aside>
             <div id="chat">
                 <input type='text' id='message_text' name='message_text' />
-                <input type='submit' id='button_message' value='Enviar mensagem' onClick="sendMessage()"/>
+                <input type='submit' id='button_message' value='Enviar' onClick="sendMessage()"/>
             </div>
             <button id="button_create" onclick="create_game()">Criar novo jogo</button>
         </div>
@@ -78,12 +86,19 @@
 
                 newtext.appendChild(text);
                 document.getElementById("history_messages").appendChild(newtext);
-            } else if (json.type == 'introNewUser') {
-                var newtext = document.createElement("option");
-                var text = document.createTextNode(json.data);
+            } else if (json.type == 'createGame') {
+                if(json.data == 'error'){
+                    alert("Não foi possível criar o jogo. Usuário já tem jogo criado em andamento!");
+                } else {
+                    var newGame = document.createElement("div");
+                    newGame.classList.add("game_component");
+                    newGame.id = json.userCreate;
+                    var text = document.createTextNode(json.userCreate + "|   0/4");
+                    newGame.appendChild(text);
+                    document.getElementById("games").appendChild(newGame);
+                }
+            } else if (json.type == "loadGames") {
 
-                newtext.appendChild(text);
-                document.getElementById("multiple").appendChild(newtext);
             }
         }
 
@@ -105,8 +120,16 @@
         function getUser(){
             socket.send(JSON.stringify({
                 inGame: "false",
-                type:"getUser",
+                type:"getUser"
             })); 
+        }
+
+        function create_game(){
+            socket.send(JSON.stringify({
+                inGame: "false",
+                type: "createGame",
+                name : user
+            }));
         }
     </script>
 </body>
