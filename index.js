@@ -10,7 +10,6 @@
 
 const app = require('./app');
 const appWs = require('./app-ws');
-const appChat = require('./chat');
 
 const server = app.listen(process.env.PORT || 3000, () => {
     console.log(`App Express is running!`);

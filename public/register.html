@@ -10,13 +10,18 @@
         const ws = new WebSocket("ws://" + location.host);
 
         function send(){
-            ws.send(JSON.stringify({
-                inGame: "false",
-                type:"register",
-                username: username.value,
-                email: email.value,
-                senha: senha.value
-            }));
+            if(username.value != '' && email.value != '' && senha.value != ''){
+                ws.send(JSON.stringify({
+                    inGame: "false",
+                    type:"register",
+                    username: username.value,
+                    email: email.value,
+                    senha: senha.value
+                }));
+            } else {
+                alert("dados faltando...");
+            }
+            
         }
 
         ws.onmessage = (event) => {        
