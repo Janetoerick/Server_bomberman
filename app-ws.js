@@ -99,6 +99,7 @@ function onMessage(ws, data) {
                 }));
             } 
         } else if (json.type == "login") {          // ------------------------ // JSON : { inGame: "false",                        
+            var verify = false;
             last_login = json.username;
             for(var i = 0; i < users.length; i++){                              //          type:"login",
                 if(users[i].username == json.username){                         //          username: <login do usuario>,
@@ -108,18 +109,15 @@ function onMessage(ws, data) {
                             type: "login",
                             data: "success"
                         }));
-                    } else {
-                        ws.send(JSON.stringify({
-                            type: "login",
-                            data: "error"
-                        }));
+                        verify = true;
                     }
-                } else {
-                    ws.send(JSON.stringify({
-                        type: "login",
-                        data: "error"
-                    }));
                 }
+            }
+            if(!verify){
+                ws.send(JSON.stringify({
+                    type: "login",
+                    data: "error"
+                }));
             }
         } else if (json.type == "setMessage"){
             console.log("usuario: "+ json.username +" - mandou no chat: "+ json.message);
@@ -173,7 +171,7 @@ function onMessage(ws, data) {
                         type: "createGame",
                         data: "success",
                         userCreate: json.name,
-                        size_players: 0
+                        size_players: 1
                     }));
                 }
             }

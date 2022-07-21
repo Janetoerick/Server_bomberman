@@ -20,11 +20,13 @@
 
         ws.onmessage = (event) => {        
             const json = JSON.parse(event.data);
-            if (json.data == 'error') {
-                document.getElementById("erro").innerHTML = "UserName ou senha inválido!"
-                document.getElementById("erro").style.color = "red";
-            } else if (json.data == 'success') {
-                window.location.href = "chat";
+            if(json.type == "login"){
+                if (json.data == "error") {
+                    document.getElementById("erro").innerHTML = "UserName ou senha inválido!"
+                    document.getElementById("erro").style.color = "red";
+                } else {
+                    window.location.href = "chat";
+                }
             }
         }
     </script>
