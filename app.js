@@ -21,4 +21,8 @@ app.get('/register', (req, res) => {
     res.sendFile(__dirname + '/public/register.html');
 });
 
+app.get('/chat', (req, res) => {
+    res.sendFile(__dirname + '/public/chat.html');
+});
+
 module.exports = app;

@@ -41,13 +41,12 @@ let player = {
     death: false            // se esta morto
 };
 
-function getGame(nameOwner){
+function getGame(){
     for(i = 0; i < lobby.maps.length; i++){
         if(ws == lobby.maps[i].owner){
             return lobby.maps[i];
         }
     }
-
     return false;
 }
 

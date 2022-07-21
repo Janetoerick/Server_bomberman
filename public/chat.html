@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <div id="users_logged">
+        <p>Usuários logados:</p>
+        <select multiple="multiple" id='users_list'></select>
+    </div>
+    <div id='user_access'>
+        <form id="login_user">
+            <input type='text' placeholder='Insert your nick' name='nick' id='nick' />
+            <input type='submit' value='Login' />
+        </form>
+    </div>
+    <div id='chat_room'>
+        <div id="history_messages"></div>
+        <form id="chat">
+            <input type='text' id='message_text' name='message_text' />
+            <input type='submit' value='Send message' />
+        </form>
+    </div>
+
+    
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect();
+        $("#chat_room").hide();
+
+        $("form#chat").submit(function(e){
+            e.preventDefault();
+
+            var message = $(this).find("#message_text").val();
+            var user = $(this).find("#nick").val();
+
+            if(message != ''){
+                socket.emit("send message", {message: message, user: user}, function(){
+                    $("form#chat_room #message_text").val("");
+                });
+            } else {
+                alert("Digite algo antes de enviar a mensagem!");
+            }
+        });
+
+        socket.on("update messages", function(data){
+            var formatted_message = $("<p/>").text(data.message);
+            $("#history_messages").append(formatted_message);
+        });
+
+        $("form#login_user").submit(function(e){
+            e.preventDefault();
+            socket.emit("login", $(this).find("#nick").val(), function(valido){
+                if(valido){
+                    $("#user_access").hide();
+                    $("#chat_room").show();
+                }else{
+                    $("#user_access").val("");
+                    alert("Nome de usuário já utilizado no chat");
+                }
+            });
+        });
+
+        socket.on("update users", function(users){
+            $("#users_list").empty();
+            $.each(users, function(index){
+                var user_op = $("<option />").text(users[index]);
+                $("#users_list").append(user_op);
+            });
+        });
+    </script>
+</body>
+</html>
