@@ -131,6 +131,9 @@
                     newGame.appendChild(text3);
                     document.getElementById("games").appendChild(newGame);
                 }
+            } else if(json.type == "atGame"){
+                var temp = document.getElementById(json.id + "_players");
+                temp.innerHTML = json.size + " / 4";
             }
         }
 

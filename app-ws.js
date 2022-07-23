@@ -158,6 +158,8 @@ function onMessage(ws, data) {
                 newgame.id = json.name;         // criando novo jogo
                 newgame.owner = ws;             //
                 newgame.link_acess = json.name; //
+                newPlayer.position_x = 1;
+                newPlayer.position_y = 1;
     
                 let newplayer = player;         //
                 newplayer.username = json.name; // criando novo jogador
@@ -205,37 +207,53 @@ function onMessage(ws, data) {
 
                 let i = 0;
                 let tempGame;
+                let is_owner = false;       // verificador se eh dono da sala
                 while(i < lobby.games.length){
-                    //console.log("-->  ", lobby.games[i].id);
+                    if(json.name = lobby.games[i].id){
+                        is_owner = true;
+                    }
                     if(json.nameId == lobby.games[i].id){
                         tempGame = lobby.games[i];
                         break;
                     }
                     i++;
                 }
-    
-                if(tempGame.players.length == 1){
-                    newPlayer.position_x = 10;
-                    newPlayer.position_y = 0;
-                } else if(tempGame.players.length == 2){
-                    newPlayer.position_x = 10;
-                    newPlayer.position_y = 10;
-                } else if(tempGame.players.length == 3){
-                    newPlayer.position_x = 0;
-                    newPlayer.position_y = 10;
-                } else {
-                    ws.send(JSON.stringify({
-                        type: "introGame",
-                        data: "Erro - Jogo já atingiu o número máximo de jogadores"
-                    }));
-                }
-                
-                if(i == lobby.games.length){
-                    lobby.games[i].players.push(newPlayer);
-                    ws.send(JSON.stringify({
-                        type: "introGame",
-                        data: "ERROR 119"
-                    }));
+                if(!is_owner){
+                    if(tempGame.players.length == 1){
+                        newPlayer.position_x = 8;
+                        newPlayer.position_y = 1;
+                    } else if(tempGame.players.length == 2){
+                        newPlayer.position_x = 8;
+                        newPlayer.position_y = 8;
+                    } else if(tempGame.players.length == 3){
+                        newPlayer.position_x = 1;
+                        newPlayer.position_y = 8;
+                    } else {
+                        ws.send(JSON.stringify({
+                            type: "introGame",
+                            data: "Erro - Jogo já atingiu o número máximo de jogadores"
+                        }));
+                    }
+                    
+                    if(i == lobby.games.length){
+                        lobby.games[i].players.push(newPlayer);
+                        ws.send(JSON.stringify({
+                            type: "introGame",
+                            data: "ERROR 119"
+                        }));
+                    } else {
+                        ws.send(JSON.stringify({
+                            type: "introGame",
+                            data: "success"
+                        }));
+                        for(i = 0; i < clients.length; i++){
+                            clients[i].send(JSON.stringify({
+                                type: "atGame",
+                                id: tempGame.id,
+                                size: tempGame.players.length + 1
+                            }));
+                        }
+                    }
                 } else {
                     ws.send(JSON.stringify({
                         type: "introGame",
