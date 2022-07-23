@@ -311,7 +311,7 @@ function onMessage(ws, data) {
                     for(var j = 0; j < clients.length; j++){ // manda a mensagem para todos que o jogo começou
                         
                     console.log("Envia para todos que o jogo comecou");
-                        clients[i].send(JSON.stringify({
+                        clients[j].send(JSON.stringify({
                             type: "startGame",
                             data: json.id,
                             player1: position_p[0],
