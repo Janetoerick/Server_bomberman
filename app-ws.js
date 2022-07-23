@@ -228,7 +228,7 @@ function onMessage(ws, data) {
                     }
                     i++;
                 }
-                if(!lobby.games[i].started){
+                if(lobby.games[i].started){
                     ws.send(JSON.stringify({
                         type: "introGame",
                         data: "Erro - Jogo já foi iniciado!"
