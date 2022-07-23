@@ -300,10 +300,11 @@ function onMessage(ws, data) {
                         lobby.games[i].players[j].socket.send(JSON.stringify({
                             type: "startGame",
                             data: "start",
-                            player1: position_p[j],
-                            player2: position_p[j],
-                            player3: position_p[j],
-                            player4: position_p[j]
+                            player1: position_p[0],
+                            player2: position_p[1],
+                            player3: position_p[2],
+                            player4: position_p[3],
+                            player: "player" + j
                         }));
                     }
                     lobby.games[i].started = true;
