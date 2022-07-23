@@ -230,7 +230,7 @@ function onMessage(ws, data) {
                     }));
                 }
                 
-                if(tempGame == NULL){
+                if(i == lobby.games.length){
                     lobby.games[i].players.push(newPlayer);
                     ws.send(JSON.stringify({
                         type: "introGame",
