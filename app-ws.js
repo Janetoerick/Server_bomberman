@@ -332,7 +332,7 @@ function onMessage(ws, data) {
                     for(var j = 0; j < lobby.games[i].players.length; j++){
                         lobby.games[i].players[j].socket.send(JSON.stringify({
                             type: "bombCreate",
-                            data: "newbomb",
+                            data: json.id,
                             position_x: json.position_x,
                             position_y: json.position_y
                         }));
@@ -358,12 +358,13 @@ function onMessage(ws, data) {
                             if(count_players == 1){
                                 lobby.games[i].players[j].socket.send(JSON.stringify({
                                     type: "winner",
-                                    data: true
+                                    data: json.id
                                 }));
                             } else {
                                 lobby.games[i].players[j].socket.send(JSON.stringify({
                                     type: "deathPlayer",
-                                    data: json.name
+                                    data: json.id,
+                                    name: json.name
                                 }));
                             }
                         }
@@ -377,7 +378,8 @@ function onMessage(ws, data) {
                     for(var j = 0; j < lobby.games[i].players.length; j++){
                         lobby.games[i].players[j].socket.send(JSON.stringify({
                             type: "getPower",
-                            data: json.idPower
+                            data: json.id,
+                            power: json.idPower
                         }));
                     }
                     break;
