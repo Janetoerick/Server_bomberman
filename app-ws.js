@@ -298,16 +298,27 @@ function onMessage(ws, data) {
                     break;
                 }
             }
-        } else if (json.type == "move") { // mover personagem
 
-        } else if (json.type == "bombCreate") { // colocar bomba no mapa
-
-        } else if (json.type == "bombDestroyer") { // danos causado pela bomba (qual bomba explodiu e quais blocos quebrou)
+        } else if (json.type == "bombCreate") { // colocar bomba no mapa        ----------- // Json { type: "bombCreate", id = <nome dono>, position_x: <>, position_y <>}
+            for(var i = 0; i < lobby.games.length; i++){
+                if(json.id == lobby.games[i].id){
+                    for(var j = 0; j < lobby.games[i].players.length; j++){
+                        lobby.games[i].players[j].socket.send(JSON.stringify({
+                            type: "bombCreate",
+                            data: "newbomb",
+                            position_x: json.position_x,
+                            position_y: json.position_y
+                        }));
+                    }
+                }
+            }
 
         } else if (json.type == "deathPlayer"){ // jogador morreu [se esta sobrando um, manda mensagem que ele ganhou]
-
+        
         } else if (json.type == "getPower") { // pegar poder
 
+        } else if (json.type == "move") { // mover personagem
+        
         }
     }
         
