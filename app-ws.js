@@ -43,11 +43,11 @@ let last_login;
 
 // criando usuarios e game para teste no unity ####
 let p1 = player;
-p1.username = janeto;
+p1.username = "janeto";
 let p2 = player;
-p2.username = clauber;
+p2.username = "clauber";
 let g = game;
-g.id = clauber;
+g.id = "clauber";
 g.players.push(p1);
 g.players.push(p2);
 lobby.games.push(g);
