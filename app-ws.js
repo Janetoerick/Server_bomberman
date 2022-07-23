@@ -167,9 +167,15 @@ function onMessage(ws, data) {
             } else {
                 var newgame = game;             // 
                 newgame.id = json.name;         // criando novo jogo
+<<<<<<< HEAD
                 newgame.owner = ws;             //
     
                 let newplayer = player;         //
+=======
+                newgame.owner = ws;
+            
+                let newplayer = player;    
+>>>>>>> 03d3752dd7ce79cdda194d431264d62be5f2d67e
                 newplayer.username = json.name; // criando novo jogador
                 newplayer.socket = ws;          //
 
@@ -258,7 +264,7 @@ function onMessage(ws, data) {
                             data: "ERROR 119"
                         }));
                     } else {
-                        console.log(tempGame.players.length);
+                        //console.log(tempGame.players.length);
                         ws.send(JSON.stringify({
                             type: "introGame",
                             data: "success",
@@ -290,7 +296,7 @@ function onMessage(ws, data) {
                         }));
                         break;
                     }
-                    console.log("Encontrou o jogo");
+                    //console.log("Encontrou o jogo");
                     var position_p = [-1, -1, -1, -1];
                     for(var j = 0; j < lobby.games[i].players.length; j++){ // pega quantas pessoas tem na partida e atribui o checkpoint
                         position_p[j] = j;
@@ -308,7 +314,7 @@ function onMessage(ws, data) {
                     // }
                     for(var j = 0; j < clients.length; j++){ // manda a mensagem para todos que o jogo começou
                         
-                    console.log("Envia para todos que o jogo comecou");
+                    //console.log("Envia para todos que o jogo comecou");
                         clients[j].send(JSON.stringify({
                             type: "startGame",
                             data: json.id,
