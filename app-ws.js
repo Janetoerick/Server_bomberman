@@ -106,7 +106,7 @@ function onMessage(ws, data) {
             last_login = json.username;
             for(var i = 0; i < users.length; i++){                              //          type:"login",
                 if(users[i].username == json.username){                         //          username: <login do usuario>,
-                    if(users[i].password == json.password){                     //          senha: <senha do usuario>
+                    if(users[i].senha == json.senha){                     //          senha: <senha do usuario>
                         console.log("$ User ", json.username, " fez login")     //         }
                         ws.send(JSON.stringify({
                             type: "login",
