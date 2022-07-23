@@ -42,15 +42,15 @@ let player = {
 let last_login;
 
 // criando usuarios e game para teste no unity ####
-let p1 = player;
-p1.username = "janeto";
-let p2 = player;
-p2.username = "clauber";
-let g = game;
-g.id = "clauber";
-g.players.push(p2);
-g.players.push(p1);
-lobby.games.push(g);
+// let p1 = player;
+// p1.username = "janeto";
+// let p2 = player;
+// p2.username = "clauber";
+// let g = game;
+// g.id = "clauber";
+// g.players.push(p2);
+// g.players.push(p1);
+// lobby.games.push(g);
 // ################################################
 
 function getGame(id){    // verifica se existe o jogo no servidor se existir retorna true, se nao, retorna false
@@ -168,13 +168,11 @@ function onMessage(ws, data) {
                 var newgame = game;             // 
                 newgame.id = json.name;         // criando novo jogo
                 newgame.owner = ws;             //
-                newPlayer.position_x = 1;
-                newPlayer.position_y = 1;
     
                 let newplayer = player;         //
                 newplayer.username = json.name; // criando novo jogador
                 newplayer.socket = ws;          //
-    
+
                 newgame.players.push(newplayer);// colocando jogador no jogo
                 
 
