@@ -26,7 +26,6 @@ let game = {
     owner: "",
     link_acess: "",
     players: [],            // jogadores
-    winner: -1,             // vencedor
     started: false          // se o jogo começou
 };
 
@@ -314,7 +313,34 @@ function onMessage(ws, data) {
             }
 
         } else if (json.type == "deathPlayer"){ // jogador morreu [se esta sobrando um, manda mensagem que ele ganhou]
-        
+            for(var i = 0; i < lobby.games.length; i++){                // -------- JSON { type: "deathPlayer", id: <nome dono>, name: <nome jogador morto>}
+                if(json.id == lobby.games[i]){
+                    var count_players = 0;
+                    for(var j = 0; j < lobby.games[i].players.length; j++){
+                        if(lobby.games[i].players[j].username == json.name){
+                            lobby.games[i].players[j].death = true;
+                        }
+                        if(!lobby.games[i].players[j].death){
+                            count_players++;
+                        }
+                    }
+                    for(var j = 0; j < lobby.games[i].players.length; j++){
+                        if(!lobby.games[i].players[j].death){
+                            if(count_players == 1){
+                                lobby.games[i].players[j].socket.send(JSON.stringify({
+                                    type: "winner",
+                                    data: true,
+                                }));
+                            } else {
+                                lobby.games[i].players[j].socket.send(JSON.stringify({
+                                    type: "deathPlayer",
+                                    data: json.name,
+                                }));
+                            }
+                        }
+                    }
+                }
+            }
         } else if (json.type == "getPower") { // pegar poder
 
         } else if (json.type == "move") { // mover personagem
