@@ -178,7 +178,7 @@ function onMessage(ws, data) {
                 // }
                 // console.log("----------------------------------------------------------------------------------");
     
-                // console.log("Jogador ", json.name, " criou um novo jogo. "); // notificando no servidor
+                console.log("Jogador ", json.name, " criou um novo jogo. "); // notificando no servidor
                 
                 for(var i = 0; i < clients.length; i++){
                     clients[i].send(JSON.stringify({
@@ -202,6 +202,16 @@ function onMessage(ws, data) {
                 let newPlayer = player;
                 newPlayer.username = json.name;
                 newPlayer.socket = ws;
+
+                let i = 0;
+                let tempGame;
+                while(i < lobby.games.length){
+                    console.log("-->  ", lobby.games[i].id);
+                    if(json.nameId == lobby.games[i].id){
+                        tempGame = lobby.games[i];
+                    }
+                    i++;
+                }
     
                 if(tempGame.players.length == 1){
                     newPlayer.position_x = 10;
