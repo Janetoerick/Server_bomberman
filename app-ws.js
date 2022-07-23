@@ -292,7 +292,7 @@ function onMessage(ws, data) {
                         }));
                         break;
                     }
-
+                    console.log("Encontrou o jogo");
                     var position_p = [-1, -1, -1, -1];
                     for(var j = 0; j < lobby.games[i].players.length; j++){ // pega quantas pessoas tem na partida e atribui o checkpoint
                         position_p[j] = j;
@@ -308,10 +308,12 @@ function onMessage(ws, data) {
                     //         player: j
                     //     }));
                     // }
-                    for(var j = 0; j < clients; j++){ // manda a mensagem para todos que o jogo começou
+                    for(var j = 0; j < clients.length; j++){ // manda a mensagem para todos que o jogo começou
+                        
+                    console.log("Envia para todos que o jogo comecou");
                         clients[i].send(JSON.stringify({
                             type: "startGame",
-                            data: "start",
+                            data: json.id,
                             player1: position_p[0],
                             player2: position_p[1],
                             player3: position_p[2],
