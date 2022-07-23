@@ -272,11 +272,19 @@ function onMessage(ws, data) {
         } else if (json.type == "startGame") { // começar a partida     -------------------------- // JSON { type: "startGame", id: <nome dono>,  }
             for(var i = 0; i < lobby.games.length; i++){
                 if(lobby.games[i].id == json.id){
+                    if(lobby.games[i].players.length == 1){ // se só tiver um jogador na partida -> da erro
+                        ws.send(JSON.stringify({
+                            type: "introGame",
+                            data: "erro"
+                        }));
+                        break;
+                    }
+
                     var position_p = [-1, -1, -1, -1];
-                    for(var j = 0; j < lobby.games[i].players.length; j++){
+                    for(var j = 0; j < lobby.games[i].players.length; j++){ // pega quantas pessoas tem na partida e atribui o checkpoint
                         position_p[j] = j;
                     }
-                    for(var j = 0; j < lobby.games[i].players.length; j++){
+                    for(var j = 0; j < lobby.games[i].players.length; j++){ // manda a mensagem para todos que o jogo começou
                         lobby.games[i].players[j].socket.send(JSON.stringify({
                             type: "StartGame",
                             data: "start",
