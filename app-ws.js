@@ -329,8 +329,8 @@ function onMessage(ws, data) {
         } else if (json.type == "bombCreate") { // colocar bomba no mapa        ----------- // Json { inGame: "true", type: "bombCreate", id = <nome dono>, position_x: <>, position_y <>}
             for(var i = 0; i < lobby.games.length; i++){
                 if(json.id == lobby.games[i].id){
-                    for(var j = 0; j < lobby.games[i].players.length; j++){
-                        lobby.games[i].players[j].socket.send(JSON.stringify({
+                    for(var j = 0; j < clients.length; j++){
+                        clients.send(JSON.stringify({
                             type: "bombCreate",
                             data: json.id,
                             position_x: json.position_x,
@@ -355,17 +355,19 @@ function onMessage(ws, data) {
                     }
                     for(var j = 0; j < lobby.games[i].players.length; j++){
                         if(!lobby.games[i].players[j].death){
-                            if(count_players == 1){
-                                lobby.games[i].players[j].socket.send(JSON.stringify({
-                                    type: "winner",
-                                    data: json.id
-                                }));
-                            } else {
-                                lobby.games[i].players[j].socket.send(JSON.stringify({
-                                    type: "deathPlayer",
-                                    data: json.id,
-                                    name: json.name
-                                }));
+                            for(var k = 0; k < clients.length; k++){
+                                if(count_players == 1){
+                                    clients[k].send(JSON.stringify({
+                                        type: "winner",
+                                        data: json.id
+                                    }));
+                                } else {
+                                    clients[k].send(JSON.stringify({
+                                        type: "deathPlayer",
+                                        data: json.id,
+                                        name: json.name
+                                    }));
+                                }
                             }
                         }
                     }
@@ -375,8 +377,8 @@ function onMessage(ws, data) {
         } else if (json.type == "getPower") { // pegar poder   ---- JSON { inGame: "true", type: "getPower", id: <nome dono>, idPower: <id do poder pego>}
             for(var i = 0; i < lobby.games.length; i++){
                 if(lobby.games[i].id == json.id){
-                    for(var j = 0; j < lobby.games[i].players.length; j++){
-                        lobby.games[i].players[j].socket.send(JSON.stringify({
+                    for(var j = 0; j < clients.length; j++){
+                        clients.send(JSON.stringify({
                             type: "getPower",
                             data: json.id,
                             power: json.idPower
