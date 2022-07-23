@@ -233,6 +233,7 @@ function onMessage(ws, data) {
                         type: "introGame",
                         data: "Erro - Jogo já foi iniciado!"
                     }));
+                    return;
                 }
                 if(!is_owner){
                     if(tempGame.players.length == 1){
@@ -296,15 +297,26 @@ function onMessage(ws, data) {
                     for(var j = 0; j < lobby.games[i].players.length; j++){ // pega quantas pessoas tem na partida e atribui o checkpoint
                         position_p[j] = j;
                     }
-                    for(var j = 0; j < lobby.games[i].players.length; j++){ // manda a mensagem para todos que o jogo começou
-                        lobby.games[i].players[j].socket.send(JSON.stringify({
+                    // for(var j = 0; j < lobby.games[i].players.length; j++){ // manda a mensagem para todos que o jogo começou
+                    //     lobby.games[i].players[j].socket.send(JSON.stringify({
+                    //         type: "startGame",
+                    //         data: "start",
+                    //         player1: position_p[0],
+                    //         player2: position_p[1],
+                    //         player3: position_p[2],
+                    //         player4: position_p[3],
+                    //         player: j
+                    //     }));
+                    // }
+                    for(var j = 0; j < clients; j++){ // manda a mensagem para todos que o jogo começou
+                        clients[i].send(JSON.stringify({
                             type: "startGame",
                             data: "start",
                             player1: position_p[0],
                             player2: position_p[1],
                             player3: position_p[2],
                             player4: position_p[3],
-                            player: "player" + j
+                            player: j
                         }));
                     }
                     lobby.games[i].started = true;
