@@ -48,8 +48,8 @@ let p2 = player;
 p2.username = "clauber";
 let g = game;
 g.id = "clauber";
-g.players.push(p1);
 g.players.push(p2);
+g.players.push(p1);
 lobby.games.push(g);
 // ################################################
 
@@ -259,6 +259,7 @@ function onMessage(ws, data) {
                             data: "ERROR 119"
                         }));
                     } else {
+                        console.log(tempGame.players.length);
                         ws.send(JSON.stringify({
                             type: "introGame",
                             data: "success",
