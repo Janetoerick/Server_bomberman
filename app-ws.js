@@ -209,6 +209,7 @@ function onMessage(ws, data) {
                     //console.log("-->  ", lobby.games[i].id);
                     if(json.nameId == lobby.games[i].id){
                         tempGame = lobby.games[i];
+                        break;
                     }
                     i++;
                 }
@@ -230,6 +231,7 @@ function onMessage(ws, data) {
                 }
                 
                 if(tempGame == NULL){
+                    lobby.games[i].players.push(newPlayer);
                     ws.send(JSON.stringify({
                         type: "introGame",
                         data: "ERROR 119"
