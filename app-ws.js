@@ -206,7 +206,7 @@ function onMessage(ws, data) {
                 let i = 0;
                 let tempGame;
                 while(i < lobby.games.length){
-                    console.log("-->  ", lobby.games[i].id);
+                    //console.log("-->  ", lobby.games[i].id);
                     if(json.nameId == lobby.games[i].id){
                         tempGame = lobby.games[i];
                     }
@@ -229,23 +229,15 @@ function onMessage(ws, data) {
                     }));
                 }
                 
-                var compare = false;
-                for(i = 0; i < lobby.games.length; i++){
-                    if(lobby.games.id == json.nameId){
-                        lobby.games.players.push(newPlayer);
-                        console.log("Jogador ",newplayer.username, " entrou no jogo de ", json.nameId);
-                        ws.send(JSON.stringify({
-                            type: "introGame",
-                            data: "success"
-                        }));
-                        compare = true;
-                        break;
-                    }
-                }
-                if(!compare){
+                if(tempGame == NULL){
                     ws.send(JSON.stringify({
                         type: "introGame",
                         data: "ERROR 119"
+                    }));
+                } else {
+                    ws.send(JSON.stringify({
+                        type: "introGame",
+                        data: "success"
                     }));
                 }
             }
