@@ -219,7 +219,7 @@ function onMessage(ws, data) {
                 let tempGame;
                 let is_owner = false;       // verificador se eh dono da sala
                 while(i < lobby.games.length){
-                    if(json.name = lobby.games[i].id){
+                    if(json.name == lobby.games[i].id){
                         is_owner = true;
                     }
                     if(json.nameId == lobby.games[i].id){
@@ -286,7 +286,7 @@ function onMessage(ws, data) {
                 if(lobby.games[i].id == json.id){
                     if(lobby.games[i].players.length == 1){ // se só tiver um jogador na partida -> da erro
                         ws.send(JSON.stringify({
-                            type: "introGame",
+                            type: "startGame",
                             data: "erro"
                         }));
                         break;
@@ -298,7 +298,7 @@ function onMessage(ws, data) {
                     }
                     for(var j = 0; j < lobby.games[i].players.length; j++){ // manda a mensagem para todos que o jogo começou
                         lobby.games[i].players[j].socket.send(JSON.stringify({
-                            type: "StartGame",
+                            type: "startGame",
                             data: "start",
                             player1: position_p[j],
                             player2: position_p[j],
