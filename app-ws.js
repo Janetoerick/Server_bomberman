@@ -24,7 +24,6 @@ let message_chat = {
 let game = {
     id: "",
     owner: "",
-    link_acess: "",
     players: [],            // jogadores
     started: false          // se o jogo começou
 };
@@ -41,6 +40,18 @@ let player = {
 };
 
 let last_login;
+
+// criando usuarios e game para teste no unity ####
+let p1 = player;
+p1.username = janeto;
+let p2 = player;
+p2.username = clauber;
+let g = game;
+g.id = clauber;
+g.players.push(p1);
+g.players.push(p2);
+lobby.games.push(g);
+// ################################################
 
 function getGame(id){    // verifica se existe o jogo no servidor se existir retorna true, se nao, retorna false
     if(lobby.games.length > 0){
@@ -113,6 +124,7 @@ function onMessage(ws, data) {
                         }));
                         verify = true;
                     }
+                    break;
                 }
             }
             if(!verify){
@@ -156,7 +168,6 @@ function onMessage(ws, data) {
                 var newgame = game;             // 
                 newgame.id = json.name;         // criando novo jogo
                 newgame.owner = ws;             //
-                newgame.link_acess = json.name; //
                 newPlayer.position_x = 1;
                 newPlayer.position_y = 1;
     
@@ -238,6 +249,7 @@ function onMessage(ws, data) {
                             type: "introGame",
                             data: "Erro - Jogo já atingiu o número máximo de jogadores"
                         }));
+                        return;
                     }
                     
                     if(i == lobby.games.length){
